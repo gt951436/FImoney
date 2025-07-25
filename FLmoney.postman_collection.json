@@ -7,7 +7,7 @@
 	},
 	"item": [
 		{
-			"name": "http://localhost:8080/products/19b06b0e-9ffd-40c8-9e37-215d29d8e1a9/quantity",
+			"name": "updateQuantity",
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -47,7 +47,7 @@
 			"response": []
 		},
 		{
-			"name": "http://localhost:8080/products",
+			"name": "getPaginatedList",
 			"request": {
 				"auth": {
 					"type": "inherit"
@@ -69,7 +69,7 @@
 			"response": []
 		},
 		{
-			"name": "http://localhost:8080/products",
+			"name": "addProduct",
 			"request": {
 				"auth": {
 					"type": "inherit"
@@ -100,7 +100,7 @@
 			"response": []
 		},
 		{
-			"name": "http://localhost:8080/login",
+			"name": "userLogin",
 			"request": {
 				"auth": {
 					"type": "inherit"
@@ -131,7 +131,7 @@
 			"response": []
 		},
 		{
-			"name": "http://localhost:8080/register",
+			"name": "userRegister",
 			"request": {
 				"auth": {
 					"type": "inherit"
