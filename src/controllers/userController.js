@@ -55,7 +55,7 @@ exports.login = async (req, res) => {
     });
     console.log("JWT generated for user:", existing.username);
 
-    res.json({ access_token });
+    res.status(200).json({ access_token });
   } catch (err) {
     console.error("Login error:", err.message);
     res.status(500).json({ message: "Server error" });

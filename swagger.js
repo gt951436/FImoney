@@ -35,7 +35,6 @@ const options = {
     ],
   },
 
-
   apis: ["./src/routes/*.js"],
 };
 

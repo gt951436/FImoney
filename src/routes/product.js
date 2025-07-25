@@ -3,12 +3,54 @@ const router = express.Router();
 const productController = require("../controllers/productController.js");
 const authenticateToken = require("../middlewares/auth.js");
 
-
 /**
  * @swagger
  * tags:
  *   name: Products
  *   description: Product management and inventory
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Product:
+ *       type: object
+ *       required:
+ *         - name
+ *         - type
+ *         - sku
+ *         - image_url
+ *         - description
+ *         - quantity
+ *         - price
+ *       properties:
+ *         product_id:
+ *           type: string
+ *           format: uuid
+ *           example: "8e48dfbc-2d7c-4f55-981f-3aa2e1ccf7a3"
+ *         name:
+ *           type: string
+ *           example: "Smartphone"
+ *         type:
+ *           type: string
+ *           example: "Electronics"
+ *         sku:
+ *           type: string
+ *           example: "ELEC-1234"
+ *         image_url:
+ *           type: string
+ *           format: uri
+ *           example: "https://example.com/images/phone.jpg"
+ *         description:
+ *           type: string
+ *           example: "Latest model with 128GB storage"
+ *         quantity:
+ *           type: integer
+ *           example: 10
+ *         price:
+ *           type: number
+ *           example: 499.99
  */
 
 /**
@@ -24,23 +66,14 @@ const authenticateToken = require("../middlewares/auth.js");
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - name
- *               - price
- *               - quantity
- *             properties:
- *               name:
- *                 type: string
- *               description:
- *                 type: string
- *               price:
- *                 type: number
- *               quantity:
- *                 type: integer
+ *             $ref: '#/components/schemas/Product'
  *     responses:
  *       201:
  *         description: Product created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Product'
  *       401:
  *         description: Unauthorized
  */
@@ -49,7 +82,7 @@ router.post("/", authenticateToken, productController.addProduct);
 
 /**
  * @swagger
- * /products/{id}/quantity:
+ * /products/{product_id}/quantity:
  *   put:
  *     summary: Update product quantity
  *     tags: [Products]
@@ -57,7 +90,7 @@ router.post("/", authenticateToken, productController.addProduct);
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: product_id
  *         required: true
  *         schema:
  *           type: string
@@ -73,19 +106,23 @@ router.post("/", authenticateToken, productController.addProduct);
  *             properties:
  *               quantity:
  *                 type: integer
+ *                 example: 15
  *     responses:
  *       200:
  *         description: Product updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Product'
  *       404:
  *         description: Product not found
  */
-// PUT /products/:id/quantity
+// PUT /products/:product_id/quantity
 router.put(
   "/:product_id/quantity",
   authenticateToken,
   productController.updateQuantity
 );
-
 
 /**
  * @swagger
