@@ -41,4 +41,19 @@ exports.updateQuantity = async (req, res) => {
   }
 };
 
+// paginated list of products
+exports.getProducts = async (req, res) => {
+  // parse page and limit from params(query params)
+  const page = parseInt(req.query.page) || 1; // defalut to page 1
+  const limit = parseInt(req.query.limit) || 10; // limit to 10 items per page
+  const skip = (page - 1) * limit;
 
+  try {
+    const products = await Product.find().skip(skip).limit(limit);
+    const totalProducts = await Product.countDocuments();
+    res.json({ page, limit, totalProducts, products });
+  } catch (err) {
+    console.error("error fetching products:", err);
+    res.status(500).json({ message: "server error" });
+  }
+};
