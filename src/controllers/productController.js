@@ -3,7 +3,7 @@ const Product = require("../models/product.js");
 // add product
 exports.addProduct = async (req, res) => {
   const { name, type, sku, image_url, description, quantity, price } = req.body;
-
+  // console.log(name, type, sku, image_url, description, quantity, price);
   try {
     const newProduct = new Product({
       name,
@@ -15,20 +15,21 @@ exports.addProduct = async (req, res) => {
       price,
     });
     await newProduct.save();
+    console.log("product added:", newProduct);
     res.status(201).json(newProduct);
   } catch (err) {
-    console.error("error adding product:", err);
+    console.error("error adding product:", err.message, err);
     res.status(500).json({ message: "server error" });
   }
 };
 
 // update quantity of product
 exports.updateQuantity = async (req, res) => {
-  const { id } = req.params;
+  const { product_id } = req.params;
   const { quantity } = req.body;
-
   try {
-    const product = await Product.findById(id);
+    const product = await Product.findOne({ product_id });
+    // const product = await Product.findById(id);
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }

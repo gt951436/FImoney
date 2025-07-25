@@ -1,5 +1,5 @@
 const express = require("express");
-const router = express("router");
+const router = express.Router();
 const productController = require("../controllers/productController.js");
 const authenticateToken = require("../middlewares/auth.js");
 
@@ -8,7 +8,7 @@ router.post("/", authenticateToken, productController.addProduct);
 
 // PUT /products/:id/quantity
 router.put(
-  "/:id/quantity",
+  "/:product_id/quantity",
   authenticateToken,
   productController.updateQuantity
 );

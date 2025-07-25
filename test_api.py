@@ -41,7 +41,7 @@ def test_login():
 
 def test_add_product(token):
     payload = {
-        "name": "Phone",
+        "name": "Phone2",
         "type": "Electronics",
         "sku": "PHN-001",
         "image_url": "https://example.com/phone.jpg",
@@ -80,20 +80,24 @@ def test_update_quantity(token, product_id, new_quantity):
         print_result("Update Quantity", False, 200, res.status_code, payload, res.text)
 
 def test_get_products(token, expected_quantity):
-    res = requests.get(f"{BASE_URL}/products", headers={"Authorization": f"Bearer {token}"})
+    headers = {"Authorization": f"Bearer {token}"}
+    res = requests.get(f"{BASE_URL}/products", headers=headers)
+    
     if res.status_code != 200:
         print_result("Get Products", False, 200, res.status_code, None, res.text)
         return
+
     try:
-        products = res.json()
+        response_data = res.json()
+        products = response_data.get("products", [])  # ✅ FIX: get products list safely
     except Exception:
         print_result("Get Products", False, "valid JSON list", "Invalid JSON", None, res.text)
         return
 
-    phone_products = [p for p in products if p.get("name") == "Phone"]
+    phone_products = [p for p in products if p.get("name") == "Phone2"]
     if not phone_products:
         print("Get Products: FAILED")
-        print(" Could not find product named 'Phone'")
+        print(" Could not find product named 'Phone2'")
         print(f" Response Body: {products}")
         return
 

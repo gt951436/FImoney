@@ -1,15 +1,18 @@
 const mongoose = require("mongoose");
-
-const ProductSchema = new mongoose.Schema({
+const { v4: uuidv4 } = require('uuid');
+const productSchema = new mongoose.Schema({
+product_id: {
+    type: String,
+    default: uuidv4,  // Automatically generates a UUID
+    unique: true
+  },
   name: { type: String, required: true },
   type: { type: String, required: true },
-  sku: { type: String, required: true, unique: true },
-  image_url: { type: String },
-  description: { type: String },
-  quantity: { type: Number, default: 0 },
+  sku: { type: String, required: true },
+  image_url: { type: String, required: true },
+  description: { type: String, required: true },
+  quantity: { type: Number, required: true },
   price: { type: Number, required: true },
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now },
 });
 
-module.exports = mongoose.model("Product", ProductSchema);
+module.exports = mongoose.model("Product", productSchema);
