@@ -1,56 +1,63 @@
-// registration and login
-const bcypt = require("bcyptjs");
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user.js");
 require("dotenv").config();
 
-// registering new user
+// Registering new user
 exports.register = async (req, res) => {
-  const { name, email, password } = req.body;
+  const { username, password } = req.body;
+  console.log("Attempting registration for:", username);
 
   try {
-    const existing = await User.findOne({ $or: [{ username }, { email }] });
+    const existing = await User.findOne({ $or: [{ username }] });
     if (existing) {
+      console.warn("Registration failed: username already in use:", username);
       return res
-        .status(400)
-        .json({ message: "Username or email already in use!" });
+        .status(409)
+        .json({ message: "Username already in use!" });
     }
-    // hash password before saving
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ username, email, password: hashedPassword });
+    console.log("Password hashed successfully for:", username);
+
+    
+
+    const newUser = new User({ username, password: hashedPassword });
     await newUser.save();
+    console.log("User registered successfully:", username);
     res.status(201).json({ message: "User registered successfully!" });
   } catch (err) {
-    console.error("Registraction error:", err);
-    res.status(500).json({ message: "server error" });
+    console.error("Registration error:", err.message);
+    res.status(409).json({ message: "Server error" });
   }
 };
 
-// login user
+// Login user
 exports.login = async (req, res) => {
-  const { username, email, password } = req.body;
+  const { username, password } = req.body;
+  console.log("Login attempt received:", { username});
 
   try {
-    // find user by name or email
-    const existing = await User.findOne({
-      $or: [{ username }, { email }],
-    });
+    const existing = await User.findOne({ username });
     if (!existing) {
+      console.warn("Login failed: user not found for:", username);
       return res.status(404).json({ message: "User not found!" });
-      // should be redirected to register page
     }
+
+    console.log("User found, verifying password for:", existing.username);
     const isSame = await bcrypt.compare(password, existing.password);
     if (!isSame) {
+      console.warn("Login failed: invalid password for:", existing.username);
       return res.status(400).json({ message: "Invalid credentials!" });
     }
 
-    // generate JWT token
-    const token = jwt.sign({ userId: existing._id }, process.env.JWT_SECRET, {
+    const access_token = jwt.sign({ userId: existing._id }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
-    res.json({ token });
+    console.log("JWT generated for user:", existing.username);
+
+    res.json({ access_token });
   } catch (err) {
-    console.error("login error:", err);
+    console.error("Login error:", err.message);
     res.status(500).json({ message: "Server error" });
   }
 };

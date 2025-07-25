@@ -8,7 +8,7 @@ const app = express();
 connectDB();
 app.use(express.json());
 
-app.use("/api/users", userRoutes);
-app.use("/api/products", productRoutes);
+app.use("/", userRoutes);
+app.use("/products", productRoutes);
 
 module.exports = app;
