@@ -1,17 +1,23 @@
 const jwt = require("jsonwebtoken");
-module.exports = (req, res) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader) {
-    return res.status(401).send("Authorization header is missing!");
-  }
-  const token = authHeader.split(" ")[1];
+require("dotenv").config(); // load JWT_SECRET
+
+// verify jwt token
+function authenticateToken(req, res, next) {
+  // get token from header as "Bearer token" in authorization header
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+
   if (!token) {
-    return res.status(401).send("Token is missing!");
+    return res.status(401).json({ message: "Access token missing" });
   }
+
   try {
-    req.user = jwt.verify(token, process.env.JWT_SECRET);
+    // verify token and extract payload
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.userId = decoded.userId;
     next();
-  } catch (error) {
-    res.status(401).send("invalid token!");
+  } catch (err) {
+    return res.status(403).json({ message: "Invalid token" });
   }
-};
+}
+module.exports = authenticateToken;
