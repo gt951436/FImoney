@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+
 const ProductSchema = new mongoose.Schema({
   name: { type: String, required: true },
   type: { type: String, required: true },
@@ -11,5 +12,4 @@ const ProductSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now },
 });
 
-const Product = mongoose.model("Product", ProductSchema);
-module.exports = Product;
+module.exports = mongoose.model("Product", ProductSchema);
