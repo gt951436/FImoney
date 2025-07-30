@@ -1,7 +1,7 @@
 require("dotenv").config();
 const app = require("./src/app.js");
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 
 const { swaggerUi, specs } = require("./swagger");
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
